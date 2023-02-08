@@ -1,0 +1,13 @@
+const mongoose = require("mongoose");
+
+function connectDb(connStr) {
+  mongoose
+    .connect(connStr)
+    .then(() => console.log("Kết nối thành công với user database"))
+    .catch((err) => {
+      console.log("Kết nối thất bại với user database");
+      console.log(err);
+    });
+}
+
+module.exports = connectDb;
