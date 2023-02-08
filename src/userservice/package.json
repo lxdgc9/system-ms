@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc src/app.ts --ourDir dist",
+    "build": "tsc src/app.ts --outDir dist --esModuleInterop",
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts"
   },
