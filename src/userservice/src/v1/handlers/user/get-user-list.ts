@@ -8,7 +8,7 @@ async function getUserList(
   next: express.NextFunction
 ): Promise<void> {
   try {
-    const userList = await UserModel.find({}).populate("account");
+    const userList = await UserModel.find({});
     if (!userList.length) {
       const err: HttpException = {
         name: "Danh sách rỗng",
@@ -18,7 +18,6 @@ async function getUserList(
       throw err;
     }
 
-    // Ok, gửi response
     res.json({
       status: true,
       message: "Lấy danh sách người dùng thành công",

@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 interface IUser {
-  account: mongoose.Types.ObjectId;
+  username: string;
+  password: string;
+  profile: mongoose.Types.ObjectId;
+  isActive: boolean;
 }
 
 export default IUser;

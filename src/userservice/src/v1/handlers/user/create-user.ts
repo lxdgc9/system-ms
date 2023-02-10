@@ -1,8 +1,8 @@
 import express from "express";
 import { validationResult } from "express-validator";
 import HttpException from "../../../type/http-exception";
-import CreateUserDto from "../../dtos/user/create-user";
-import AccountModel from "../../models/account";
+import CreateUserDto from "../../dtos/user/create-user-dto";
+import ProfileModel from "../../models/profile";
 import UserModel from "../../models/user";
 
 async function createUser(
@@ -10,7 +10,22 @@ async function createUser(
   res: express.Response,
   next: express.NextFunction
 ): Promise<void> {
-  const { username, password }: CreateUserDto = req.body;
+  const {
+    username,
+    password,
+    fullName,
+    dob,
+    gender,
+    phone,
+    email,
+    noIdCard,
+    placeIdCard,
+    dateIdCard,
+    address,
+    description,
+    salary,
+    allowance,
+  }: CreateUserDto = req.body;
   try {
     // Ràng buộc đầu vào
     const errs = validationResult(req);
@@ -24,8 +39,8 @@ async function createUser(
     }
 
     // Kiểm tra username đã sử dụng hay chưa
-    const account = await AccountModel.findOne({ username });
-    if (account) {
+    const user = await UserModel.findOne({ username });
+    if (user) {
       const err: HttpException = {
         name: "Username đã sử dụng",
         statusCode: 400,
@@ -34,15 +49,34 @@ async function createUser(
       throw err;
     }
 
-    // Tạo account cho người dùng
-    const newAccount = new AccountModel({ username, password });
-    await newAccount.save();
+    // Tạo hồ sơ
+    const newProfile = new ProfileModel({
+      fullName,
+      dob,
+      gender,
+      phone,
+      email,
+      idCard: {
+        no: noIdCard,
+        place: placeIdCard,
+        date: dateIdCard,
+      },
+      address,
+      description,
+      salary,
+      allowance,
+    });
 
     // Tạo người dùng
-    const newUser = new UserModel({ account: newAccount.id });
-    await newUser.save();
+    const newUser = new UserModel({
+      username,
+      password,
+      profile: newProfile.id,
+    });
 
-    // Ok, gửi response
+    await newUser.save();
+    await newProfile.save();
+
     res.status(201).json({
       status: true,
       message: "Tạo tài khoản thành công",

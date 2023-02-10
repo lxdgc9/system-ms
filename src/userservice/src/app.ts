@@ -3,7 +3,7 @@ import morgan from "morgan";
 import { MONGODB_URI, NODE_ENV } from "./config/vars";
 import connectDb from "./drivers/connect-db";
 import init from "./drivers/init";
-import router from "./v1/api";
+import apiv1 from "./v1/api";
 import errorHandler from "./v1/middlewares/error-handler";
 
 const app: Application = express();
@@ -22,10 +22,10 @@ if (NODE_ENV === "development") {
 }
 
 // Định tuyến API
-app.use("/v1", router);
+app.use("/v1", apiv1);
 
 // Bắt lỗi
 app.use(errorHandler);
 
 // Khởi động service
-app.listen(8000, () => console.log("User service đang hoạt động ..."));
+app.listen(8001, () => console.log("User service đang hoạt động ..."));
